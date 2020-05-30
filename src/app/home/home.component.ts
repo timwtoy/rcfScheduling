@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CalendarService } from './calendar.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +35,7 @@ export class HomeComponent implements OnInit {
   selectedTimeLength: TimeLengthOption = TimeLengthOption.SIXTY;
   newSlotFormGroup: FormGroup;
   selectedTime: number = 0;
+  selectedDate: string = '';
 
   constructor(
     private changeDetectorRefs: ChangeDetectorRef,
@@ -80,7 +82,7 @@ export class HomeComponent implements OnInit {
   submitSlot(): void {
     const newSlot: TimeOfDay = {
       id: uuidv4(),
-      currentDay: '05-20-2020',
+      currentDay: this.selectedDate,
       beginningTime: this.selectedTime,
       lengthOfTime: this.selectedTimeLength
     };
@@ -102,14 +104,8 @@ export class HomeComponent implements OnInit {
     this.initializeTable();
   }
 
-  testClick(event: any): void {
-    console.log(`Row clicked! ${event}`);
-    const day = new Date();
-    console.log(`Testing output: ${day.getDate()} date and day: ${day.getDay()}`)
-  }
-
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-    console.log(`${type}: ${event.value}`);
+    this.selectedDate = formatDate(event.value, 'MM-dd-yyyy', 'en-us');
   }
 
   updateTimeSlots(): void {
@@ -135,7 +131,6 @@ export class HomeComponent implements OnInit {
       numberToBeFormatted -= 12;
     }
     let decimal = numberToBeFormatted % 1;
-    console.log(`${decimal}: decimal`);
     if (decimal) {
       minutes = ':30';
       numberToBeFormatted -= .5;
