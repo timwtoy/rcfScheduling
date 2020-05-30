@@ -155,6 +155,10 @@ table {
       margin-top: 25px;
   }
 
+  .highlighted-row {
+    background-color: #98f5d6;
+  }
+
   @media only screen and (max-width: 767px) {
       .form-card {
           max-width: 67%;

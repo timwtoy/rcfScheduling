@@ -31,8 +31,9 @@ export class HomeComponent implements OnInit {
   // The slots currently taken by already signed up users
   takenTimeSlots: TimeOfDay[] = [];
   availableSlots: TimeOfDay[] = [];
-  selectedTimeOption: TimeLengthOption = TimeLengthOption.SIXTY;
+  selectedTimeLength: TimeLengthOption = TimeLengthOption.SIXTY;
   newSlotFormGroup: FormGroup;
+  selectedTime: number = 0;
 
   constructor(
     private changeDetectorRefs: ChangeDetectorRef,
@@ -57,7 +58,7 @@ export class HomeComponent implements OnInit {
   initializeTable(): void {
     //Format time
     let endTimeOption = 1;
-    if (this.selectedTimeOption === TimeLengthOption.NINETY) {
+    if (this.selectedTimeLength === TimeLengthOption.NINETY) {
       endTimeOption = 1.5;
     }
     this.availableSlots = timeSlots.map(slot => {
@@ -68,12 +69,20 @@ export class HomeComponent implements OnInit {
     this.changeDetectorRefs.detectChanges();
   }
 
+  timeSlotSelected(row: TimeOfDay) {
+    this.selectedTime = row.beginningTime;
+  }
+
+  highlightSelectedRow(row: TimeOfDay): boolean {
+    return row.beginningTime === this.selectedTime;
+  }
+
   submitSlot(): void {
     const newSlot: TimeOfDay = {
       id: uuidv4(),
       currentDay: '05-20-2020',
-      beginningTime: 8,
-      lengthOfTime: 0
+      beginningTime: this.selectedTime,
+      lengthOfTime: this.selectedTimeLength
     };
     this.calendarService.newPosting(newSlot);
   }
@@ -86,9 +95,9 @@ export class HomeComponent implements OnInit {
 
   newSelection(event: any): void {
     if (event.value === 1) {
-      this.selectedTimeOption = TimeLengthOption.NINETY;
+      this.selectedTimeLength = TimeLengthOption.NINETY;
     } else {
-      this.selectedTimeOption = TimeLengthOption.SIXTY;
+      this.selectedTimeLength = TimeLengthOption.SIXTY;
     }
     this.initializeTable();
   }
@@ -107,7 +116,7 @@ export class HomeComponent implements OnInit {
     this.takenTimeSlots.forEach( takenSlot => {
       let endTime = takenSlot.lengthOfTime === TimeLengthOption.SIXTY ? takenSlot.beginningTime + 1 : takenSlot.beginningTime + 1.5;
       this.availableSlots = this.availableSlots.map( availableSlot => {
-        let availableSlotEndTime = this.selectedTimeOption === TimeLengthOption.SIXTY ? availableSlot.beginningTime + 1 : availableSlot.beginningTime + 1.5;
+        let availableSlotEndTime = this.selectedTimeLength === TimeLengthOption.SIXTY ? availableSlot.beginningTime + 1 : availableSlot.beginningTime + 1.5;
         if (availableSlot.slotsOpen && (availableSlot.beginningTime >= takenSlot.beginningTime && availableSlot.beginningTime < endTime) || (availableSlotEndTime > takenSlot.beginningTime && availableSlotEndTime <= endTime)) {
           availableSlot.slotsOpen--;
         }
