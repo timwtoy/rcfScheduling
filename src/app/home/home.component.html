@@ -1,0 +1,66 @@
+<div class="home-container">
+    <div class="row top-row rcf-card">
+        <div class="col-xs-12 col-md-6 time-options-row">
+            <div class="form-container">
+                <span class="left-input left-span">Pick a date</span>
+                <mat-form-field class="left-input">
+                    <mat-label>Input & change events</mat-label>
+                    <input matInput [matDatepicker]="picker" (dateInput)="addEvent('input', $event)"
+                        (dateChange)="addEvent('change', $event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-6 time-options-row">
+            <div class="form-container">
+                <span class="right-span">Pick a time length</span>
+                <mat-form-field>
+                    <mat-label>Time Options</mat-label>
+                    <mat-select (selectionChange)="newSelection($event)">
+                        <mat-option *ngFor="let time of timeOptions" [value]="time.id">
+                            {{time.label}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-6" no-padding>
+            <div class="table-container">
+                <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="formattedDisplay">
+                      <th mat-header-cell *matHeaderCellDef> Time </th>
+                      <td mat-cell *matCellDef="let element"> {{element.formattedDisplay}} </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="slotsOpen">
+                      <th mat-header-cell *matHeaderCellDef> Slots available </th>
+                      <td mat-cell *matCellDef="let element"> {{element.slotsOpen}} </td>
+                    </ng-container>
+                
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  </table>
+                </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 rcf-card form-card">
+            <form [formGroup]="newSlotFormGroup" class="rcf-form" (ngSubmit)="submitSlot()">
+                <mat-form-field class="full-width form-input">
+                    <mat-label>name</mat-label>
+                    <textarea formControlName="name" matInput></textarea>
+                </mat-form-field>
+                <mat-form-field class="full-width form-input">
+                    <mat-label>Email</mat-label>
+                    <textarea formControlName="email" matInput></textarea>
+                </mat-form-field>
+                <button mat-button type="submit" class="submit-btn">Basic</button>
+            </form>
+        </div>
+    </div>
+
+</div>
