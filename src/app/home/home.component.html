@@ -1,23 +1,23 @@
 <div class="home-container">
     <div class="row top-row rcf-card">
-        <div class="col-xs-12 col-md-6 time-options-row">
+        <div class="col-xs-12 col-lg-6 time-options-row">
             <div class="form-container">
                 <span class="left-input left-span">Pick a date</span>
                 <mat-form-field class="left-input">
                     <mat-label>Input & change events</mat-label>
-                    <input matInput [matDatepicker]="picker" (dateInput)="addEvent('input', $event)"
+                    <input matInput [matDatepicker]="picker" [matDatepickerFilter]="dateFilter" (dateInput)="addEvent('input', $event)"
                         (dateChange)="addEvent('change', $event)">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
             </div>
         </div>
-        <div class="col-xs-12 col-md-6 time-options-row">
+        <div class="col-xs-12 col-lg-6 time-options-row">
             <div class="form-container">
                 <span class="right-span">Pick a time length</span>
                 <mat-form-field>
                     <mat-label>Time Options</mat-label>
-                    <mat-select (selectionChange)="newSelection($event)">
+                    <mat-select (selectionChange)="newSelection($event)" [(value)]="selectedTime">
                         <mat-option *ngFor="let time of timeOptions" [value]="time.id">
                             {{time.label}}
                         </mat-option>
@@ -27,8 +27,11 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-6" no-padding>
+    <div class="row bottom-row" [@slideInOut] *ngIf="selectedDate">
+        <div class="col-xs-12 col-md-6 no-padding rcf-card">
+            <div class="title-container">
+                <span class="centered-span">Pick a Time Slot</span>
+            </div>
             <div class="table-container">
                 <table mat-table [dataSource]="dataSource">
 
@@ -48,7 +51,10 @@
                 </div>
         </div>
 
-        <div class="col-xs-12 col-sm-6 rcf-card form-card">
+        <div class="col-xs-12 col-md-6 rcf-card form-card no-padding">
+            <div class="title-container">
+                <span class="centered-span long-span">Enter your information (optional)</span>
+            </div>
             <form [formGroup]="newSlotFormGroup" class="rcf-form" (ngSubmit)="submitSlot()">
                 <mat-form-field class="full-width form-input">
                     <mat-label>name</mat-label>
@@ -58,7 +64,7 @@
                     <mat-label>Email</mat-label>
                     <textarea formControlName="email" matInput></textarea>
                 </mat-form-field>
-                <button mat-button type="submit" class="submit-btn">Basic</button>
+                <button mat-button type="submit" class="submit-btn" [ngClass]="{'success-btn': successfulSubmit}">{{submitButtonText}}</button>
             </form>
         </div>
     </div>

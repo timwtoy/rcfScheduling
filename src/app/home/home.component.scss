@@ -50,20 +50,24 @@ table {
   }
 
   .rcf-card {
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
     margin-top: 25px;
     box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
     transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 4px;
-    background-color: #fff;
+    background-color: #fafafa;
+  }
+
+  .row {
+    margin-left: 100px;
+    margin-right: 100px;
   }
 
   .home-container {
       display: flex;
       flex-direction: column;
-      background-color: #fafafa;
+      // background-color: #fafafa;
+      margin-left: 100px;
+      margin-right: 100px;
   }
 
   div > mat-form-field {
@@ -81,8 +85,10 @@ table {
   }
 
   .form-card {
-    max-width: 30%;
-    height: 300px;
+    max-width: 40%;
+    height: auto;
+    min-height: 300px;
+    margin-left: auto;
   }
 
   .time-options-row {
@@ -102,6 +108,23 @@ table {
     font-weight: 600;
   }
 
+  .centered-span {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 18pt;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .title-container {
+    display: flex;
+    margin-top: 15px;
+  }
+
+  .long-span {
+    width: 75%;
+  }
+
   .right-span {
       margin-left: 0;
       font-size: 18pt;
@@ -116,11 +139,14 @@ table {
     margin: auto;
   }
 
+  .no-padding {
+    padding: 0;
+  }
+
   .table-container {
-      margin: auto;
       overflow: auto;
       margin-top: 25px;
-      width: 60%;
+      width: auto;
       height: 500px;
       box-shadow: 1px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
       transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -130,6 +156,10 @@ table {
 
   table.mat-table {
       margin-top: 0;
+  }
+
+  tr.mat-header-row {
+    background-color: #fafafa;
   }
 
   tr.mat-footer-row, tr.mat-row:hover {
@@ -159,12 +189,26 @@ table {
     background-color: #98f5d6;
   }
 
+  .success-btn {
+    background-color: #5cb85c;
+    color: #fff;
+  }
+
   @media only screen and (max-width: 767px) {
       .form-card {
-          max-width: 67%;
+          max-width: 100%;
       }
 
-      .table-container {
-          width: 70%;
+      form {
+        margin-bottom: 25px;
+      }
+
+      .row {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .bottom-row {
+        margin-bottom: 150px;
       }
   }

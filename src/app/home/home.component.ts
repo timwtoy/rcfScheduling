@@ -18,7 +18,17 @@ import { formatDate } from '@angular/common';
       state('expanded', style({height: '*'})),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({transform: 'translateX(-100%)'}),
+        animate('750ms ease-in', style({transform: 'translateX(0%)'}))
+      ]),
+      transition(':leave', [
+        animate('750ms ease-in', style({transform: 'translateX(-100%)'}))
+      ])
+    ])
   ],
+  
 })
 export class HomeComponent implements OnInit {
 
@@ -35,6 +45,9 @@ export class HomeComponent implements OnInit {
   newSlotFormGroup: FormGroup;
   selectedTime: number = 0;
   selectedDate: string = '';
+  dateFilter = (date: Date) => date.getDay() === new Date().getDay() || date.getDay() === new Date().getDay() + 1 || date.getDay() === new Date().getDay() + 2;
+  submitButtonText: string = 'Submit';
+  successfulSubmit: boolean = false;
 
   constructor(
     private changeDetectorRefs: ChangeDetectorRef,
@@ -48,11 +61,6 @@ export class HomeComponent implements OnInit {
       email: [''],
     });
     this.initializeTable();
-    const res: TimeOfDay[] = await this.calendarService.getCalendar('05-20-2020');
-    if (res && res.length > 0) {
-      this.takenTimeSlots = res;
-      this.updateTimeSlots();
-    }
   }
 
   // Renders the table data based on the time length option chosen by user
@@ -78,14 +86,23 @@ export class HomeComponent implements OnInit {
     return row.beginningTime === this.selectedTime;
   }
 
-  submitSlot(): void {
-    const newSlot: TimeOfDay = {
-      id: uuidv4(),
-      currentDay: this.selectedDate,
-      beginningTime: this.selectedTime,
-      lengthOfTime: this.selectedTimeLength
-    };
-    this.calendarService.newPosting(newSlot);
+  async submitSlot(): Promise<void> {
+    if (!this.successfulSubmit) {
+      const newSlot: TimeOfDay = {
+        id: uuidv4(),
+        currentDay: this.selectedDate,
+        beginningTime: this.selectedTime,
+        lengthOfTime: this.selectedTimeLength
+      };
+      try {
+        await this.calendarService.newPosting(newSlot);
+        await this.refreshTableData();
+        this.submitButtonText = 'Success!';
+        this.successfulSubmit = true;
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   remapTableData(): void {
@@ -103,8 +120,23 @@ export class HomeComponent implements OnInit {
     this.initializeTable();
   }
 
-  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-    this.selectedDate = formatDate(event.value, 'MM-dd-yyyy', 'en-us');
+  async addEvent(type: string, event: MatDatepickerInputEvent<Date>): Promise<void> {
+    this.selectedDate = this.reformatDate(event.value);
+    await this.refreshTableData();
+  }
+
+  async refreshTableData(): Promise<void> {
+    const res: TimeOfDay[] = await this.calendarService.getCalendar(this.selectedDate);
+    this.takenTimeSlots = res;
+    if (res && res.length > 0) {
+      this.updateTimeSlots();
+    } else {
+      this.initializeTable();
+    }
+  }
+
+  reformatDate(dateChosen: Date): string {
+    return formatDate(dateChosen, 'MM-dd-yyyy', 'en-us');
   }
 
   updateTimeSlots(): void {
