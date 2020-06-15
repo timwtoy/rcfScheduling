@@ -1,7 +1,7 @@
 <div class="home-container">
-    <div class="row top-row rcf-card">
+    <div class="row top-row rcf-header">
         <div class="col-xs-12 col-md-6 time-options-row">
-            <div class="form-container">
+            <div class="form-container left">
                 <span class="left-input left-span">Pick a date</span>
                 <mat-form-field class="left-input">
                     <mat-label>Input & change events</mat-label>
@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="col-xs-12 col-md-6 time-options-row">
-            <div class="form-container">
+            <div class="form-container right">
                 <span class="right-span">Pick a time length</span>
                 <mat-form-field>
                     <mat-label>Time Options</mat-label>
@@ -27,8 +27,8 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-6" no-padding>
+    <div class="row align">
+        <div class="col-xs-12 col-sm-6 no-padding">
             <div class="table-container">
                 <table mat-table [dataSource]="dataSource">
 
@@ -51,14 +51,14 @@
         <div class="col-xs-12 col-sm-6 rcf-card form-card">
             <form [formGroup]="newSlotFormGroup" class="rcf-form" (ngSubmit)="submitSlot()">
                 <mat-form-field class="full-width form-input">
-                    <mat-label>name</mat-label>
+                    <mat-label>Name</mat-label>
                     <textarea formControlName="name" matInput></textarea>
                 </mat-form-field>
                 <mat-form-field class="full-width form-input">
                     <mat-label>Email</mat-label>
                     <textarea formControlName="email" matInput></textarea>
                 </mat-form-field>
-                <button mat-button type="submit" class="submit-btn">Basic</button>
+                <button mat-button type="submit" class="submit-btn">Reserve</button>
             </form>
         </div>
     </div>
