@@ -106,6 +106,7 @@ table {
     margin-left: 0;
     font-size: 18pt;
     font-weight: 600;
+    text-align: center;
   }
 
   .centered-span {
@@ -129,6 +130,7 @@ table {
       margin-left: 0;
       font-size: 18pt;
       font-weight: 600;
+      text-align: center;
   }
 
   .form-container {
@@ -210,5 +212,14 @@ table {
 
       .bottom-row {
         margin-bottom: 150px;
+      }
+      
+      .form-container {
+        width: 100%;
+      }
+
+      .home-container {
+        margin-left: 25px;
+        margin-right: 25px;
       }
   }
