@@ -123,20 +123,29 @@ export class HomeComponent implements OnInit {
   async addEvent(type: string, event: MatDatepickerInputEvent<Date>): Promise<void> {
     this.selectedDate = this.reformatDate(event.value);
     await this.refreshTableData();
+    this.successfulSubmit = false;
+    this.submitButtonText = 'Submit';
   }
 
   async refreshTableData(): Promise<void> {
     const res: TimeOfDay[] = await this.calendarService.getCalendar(this.selectedDate);
     this.takenTimeSlots = res;
+    this.resetTable();
     if (res && res.length > 0) {
       this.updateTimeSlots();
-    } else {
-      this.initializeTable();
     }
   }
 
   reformatDate(dateChosen: Date): string {
     return formatDate(dateChosen, 'MM-dd-yyyy', 'en-us');
+  }
+
+  resetTable(): void {
+    this.availableSlots = this.availableSlots.map(slot => {
+      slot.slotsOpen = 20;
+      return slot;
+    });
+    this.remapTableData();
   }
 
   updateTimeSlots(): void {
