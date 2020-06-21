@@ -1,0 +1,19 @@
+<div class="admin-container">
+    <div class="row top-row rcf-card">
+        <div class="col-xs-12 time-options-row">
+            <div class="form-container">
+                <form [formGroup]="guardFormGroup" class="rcf-form" (ngSubmit)="submit()">
+                    <div class="title-container">
+                        <span class="centered-span long-span">Enter Admin Password</span>
+                    </div>
+                    <mat-form-field class="full-width form-input">
+                        <mat-label>Password</mat-label>
+                        <textarea formControlName="pw" matInput></textarea>
+                    </mat-form-field>
+                    <button mat-button type="submit" class="submit-btn">Submit</button>
+                    <span class="bad-pw" *ngIf="badPassword">The password entered is incorrect.</span>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

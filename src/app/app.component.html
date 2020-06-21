@@ -1,8 +1,9 @@
 <!-- Toolbar -->
 <div class="toolbar" role="banner">
   <div class="spacer"></div>
-  <span class="website-title">Rain City Fit Scheduling</span>
-    <div class="spacer"></div>
+  <span class="website-title" (click)="homeNav()">Rain City Fit Scheduling</span>
+  <div class="spacer"></div>
+  <button class="btn admin-btn" (click)="adminNav()">Admin</button>
 </div>
 
 <router-outlet></router-outlet>

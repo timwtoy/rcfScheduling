@@ -197,6 +197,18 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     line-height: 1em;
+    cursor: pointer;
+  }
+
+  .admin-btn {
+    margin-left: auto;
+    margin-right: 25px;
+    color: white;
+    font-weight: 600;
+    font-size: 15pt;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: futura-pt;
   }
 
   .circle-link {

@@ -14,11 +14,15 @@ import {MatSelectModule} from '@angular/material/select';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButton, MatButtonModule } from '@angular/material/button';
+import { AdminComponent } from './admin/admin.component';
+import { GuardComponent } from './guard/guard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    AdminComponent,
+    GuardComponent
   ],
   imports: [
     BrowserModule,

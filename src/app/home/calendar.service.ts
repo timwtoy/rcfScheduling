@@ -7,6 +7,8 @@ import { devURL, getDaysPath, newSlot } from '../constants/api.constants';
     providedIn: 'root',
 })
 export class CalendarService {
+    isAdminLoggedin?: boolean;
+    
     constructor(
         private http: HttpClient
     ) {}

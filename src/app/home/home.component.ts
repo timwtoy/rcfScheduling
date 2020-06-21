@@ -4,7 +4,7 @@ import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {TimeOfDay, timeSlots, TimeLengthOption} from './day.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { CalendarService } from './calendar.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { v4 as uuidv4 } from 'uuid';
 import { formatDate } from '@angular/common';
 
@@ -45,7 +45,8 @@ export class HomeComponent implements OnInit {
   newSlotFormGroup: FormGroup;
   selectedTime: number = 0;
   selectedDate: string = '';
-  dateFilter = (date: Date) => date.getDay() === new Date().getDay() || date.getDay() === new Date().getDay() + 1 || date.getDay() === new Date().getDay() + 2;
+  dateFilter = (date: Date) => date.getDate() === new Date().getDate() || date.getDate() === new Date().getDate() + 10 || date.getDate() === new Date().getDate() + 11;
+  newFilter = (date: Date) => (date.getDate() === new Date().getDate() && date.getMonth() === new Date().getMonth()) || date.getDate() === new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).getDate() || date.getDate() === new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).getDate();
   submitButtonText: string = 'Submit';
   successfulSubmit: boolean = false;
 
@@ -57,8 +58,8 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
     this.newSlotFormGroup = this.fb.group({
-      name: [''],
-      email: [''],
+      name: ['', Validators.required],
+      email: ['', Validators.required],
     });
     this.initializeTable();
   }
@@ -88,11 +89,16 @@ export class HomeComponent implements OnInit {
 
   async submitSlot(): Promise<void> {
     if (!this.successfulSubmit) {
+      const formGroupValue = this.newSlotFormGroup.value;
+      const name = formGroupValue.name ? formGroupValue.name : '';
+      const email = formGroupValue.email ? formGroupValue.email : '';
       const newSlot: TimeOfDay = {
         id: uuidv4(),
         currentDay: this.selectedDate,
         beginningTime: this.selectedTime,
-        lengthOfTime: this.selectedTimeLength
+        lengthOfTime: this.selectedTimeLength,
+        name: name,
+        email : email
       };
       try {
         await this.calendarService.newPosting(newSlot);

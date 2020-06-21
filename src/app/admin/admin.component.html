@@ -1,0 +1,44 @@
+<div class="admin-container">
+    <div class="row top-row rcf-card">
+        <div class="col-xs-12 time-options-row">
+            <div class="form-container">
+                <span class="left-input left-span">Pick a date</span>
+                <mat-form-field class="left-input form-input">
+                    <mat-label>Input & change events</mat-label>
+                    <input matInput [matDatepicker]="picker" (dateInput)="addEvent('input', $event)">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div class="row bottom-row" [@slideInOut] *ngIf="selectedDate">
+        <div class="col-xs-12 no-padding rcf-card">
+            <div class="title-container">
+                <span class="centered-span">Selected Time Slots</span>
+            </div>
+            <div class="table-container">
+                <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef> Name </th>
+                      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="email">
+                      <th mat-header-cell *matHeaderCellDef> Email </th>
+                      <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="formattedDisplay">
+                      <th mat-header-cell *matHeaderCellDef> Time </th>
+                      <td mat-cell *matCellDef="let element"> {{element.formattedDisplay}} </td>
+                    </ng-container>
+                
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="timeSlotSelected(row)" [ngClass]="{'highlighted-row': highlightSelectedRow(row)}"></tr>
+                  </table>
+                </div>
+        </div>
+</div>
