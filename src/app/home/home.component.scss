@@ -119,7 +119,13 @@ table {
 
   .title-container {
     display: flex;
+    flex-direction: column;
     margin-top: 15px;
+  }
+
+  .error-txt {
+    text-align: center;
+    color: #ff5447;
   }
 
   .long-span {

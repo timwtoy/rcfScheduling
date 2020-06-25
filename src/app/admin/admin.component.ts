@@ -69,7 +69,7 @@ export class AdminComponent implements OnInit {
 
   updateSlots(): void {
     this.slots = this.slots.map(slot => {
-      let endTime: number = slot.lengthOfTime === TimeLengthOption.NINETY ? 1.5 : 1;
+      let endTime: number = slot.lengthOfTime === TimeLengthOption.NINETY ? slot.beginningTime + 1.5 : slot.beginningTime + 1;
       slot.formattedDisplay = `${this.findTime(slot.beginningTime)} - ${this.findTime(endTime)}`;
       return slot;
     });
@@ -81,9 +81,11 @@ export class AdminComponent implements OnInit {
     let meridiem = 'am';
     let numberToBeFormatted = numericFormat;
     let minutes = ':00';
-    if (numberToBeFormatted > 12) {
+    if (numberToBeFormatted > 12.5) {
       meridiem = 'pm';
       numberToBeFormatted -= 12;
+    } else if (numberToBeFormatted === 12 || numberToBeFormatted === 12.5) {
+      meridiem = 'pm';
     }
     let decimal = numberToBeFormatted % 1;
     if (decimal) {

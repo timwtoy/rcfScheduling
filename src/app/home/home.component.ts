@@ -49,6 +49,7 @@ export class HomeComponent implements OnInit {
   newFilter = (date: Date) => (date.getDate() === new Date().getDate() && date.getMonth() === new Date().getMonth()) || date.getDate() === new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).getDate() || date.getDate() === new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).getDate();
   submitButtonText: string = 'Submit';
   successfulSubmit: boolean = false;
+  badRowSelected: boolean = false;
 
   constructor(
     private changeDetectorRefs: ChangeDetectorRef,
@@ -79,7 +80,12 @@ export class HomeComponent implements OnInit {
     this.changeDetectorRefs.detectChanges();
   }
 
-  timeSlotSelected(row: TimeOfDay) {
+  // Callback function for table row selected
+  timeSlotSelected(row: TimeOfDay): void {
+    if (row.slotsOpen && row.slotsOpen < 1) {
+      this.badRowSelected = true;
+      return;
+    }
     this.selectedTime = row.beginningTime;
   }
 
@@ -117,13 +123,21 @@ export class HomeComponent implements OnInit {
     this.changeDetectorRefs.detectChanges();
   }
 
+  // Time Length Option callback function
   newSelection(event: any): void {
+    let endTimeOption = 1;
     if (event.value === 1) {
       this.selectedTimeLength = TimeLengthOption.NINETY;
+      endTimeOption = 1.5;
     } else {
       this.selectedTimeLength = TimeLengthOption.SIXTY;
     }
-    this.initializeTable();
+    this.availableSlots = timeSlots.map(slot => {
+      slot.formattedDisplay = `${this.findTime(slot.beginningTime)} - ${this.findTime(slot.beginningTime + endTimeOption)}`;
+      return slot;
+    });
+    this.resetTable();
+    this.updateTimeSlots();
   }
 
   async addEvent(type: string, event: MatDatepickerInputEvent<Date>): Promise<void> {
@@ -131,6 +145,7 @@ export class HomeComponent implements OnInit {
     await this.refreshTableData();
     this.successfulSubmit = false;
     this.submitButtonText = 'Submit';
+    this.selectedTime = 0;
   }
 
   async refreshTableData(): Promise<void> {
@@ -159,7 +174,9 @@ export class HomeComponent implements OnInit {
       let endTime = takenSlot.lengthOfTime === TimeLengthOption.SIXTY ? takenSlot.beginningTime + 1 : takenSlot.beginningTime + 1.5;
       this.availableSlots = this.availableSlots.map( availableSlot => {
         let availableSlotEndTime = this.selectedTimeLength === TimeLengthOption.SIXTY ? availableSlot.beginningTime + 1 : availableSlot.beginningTime + 1.5;
-        if (availableSlot.slotsOpen && (availableSlot.beginningTime >= takenSlot.beginningTime && availableSlot.beginningTime < endTime) || (availableSlotEndTime > takenSlot.beginningTime && availableSlotEndTime <= endTime)) {
+        if (availableSlot.slotsOpen && (takenSlot.beginningTime >= availableSlot.beginningTime && takenSlot.beginningTime < availableSlotEndTime) || (endTime > availableSlot.beginningTime && endTime <= availableSlotEndTime)) {
+          // console.log(`Available: beginning - ${availableSlot.beginningTime}     end - ${availableSlotEndTime}`);
+          // console.log(`End Time: beginning - ${takenSlot.beginningTime}       end time - ${endTime}`);
           availableSlot.slotsOpen--;
         }
         return availableSlot;
@@ -172,9 +189,11 @@ export class HomeComponent implements OnInit {
     let meridiem = 'am';
     let numberToBeFormatted = numericFormat;
     let minutes = ':00';
-    if (numberToBeFormatted > 12) {
+    if (numberToBeFormatted > 12.5) {
       meridiem = 'pm';
       numberToBeFormatted -= 12;
+    } else if (numberToBeFormatted === 12 || numberToBeFormatted === 12.5) {
+      meridiem = 'pm';
     }
     let decimal = numberToBeFormatted % 1;
     if (decimal) {
